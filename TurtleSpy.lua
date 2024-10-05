@@ -843,20 +843,35 @@ CopyDecompiled.MouseButton1Click:Connect(function()
         end)
 
         -- Decompile the remotescript of the remote
-        local success = { pcall(function()setclipboard(decompile(remoteScripts[remote]))end) }
-        decompiling = false
-        if success[1] then
-            CopyDecompiled.Text = "Copied decompilation!"
-            CopyDecompiled.TextColor3 = Color3.fromRGB(76, 209, 55)
-        else
-            warn(success[2], success[3])
-            CopyDecompiled.Text = "Decompilation error! Check F9 to see the error."
-            CopyDecompiled.TextColor3 = Color3.fromRGB(232, 65, 24)
-        end
-        wait(1.6)
-        CopyDecompiled.Text = "Copy decompiled script"
-        CopyDecompiled.TextColor3 = Color3.fromRGB(250, 251, 255)
-    end
+        -- Decompile the remotescript of the remote
+local remote = "ByteNetReliable" -- Set the remote name
+
+local remoteScript = game:GetService("ReplicatedStorage")[remote]
+if not remoteScript then
+    warn("Remote not found: ", remote)
+    return
+end
+
+local success = { pcall(function()
+    setclipboard(decompile(remoteScript))
+end) }
+
+decompiling = false
+
+if success[1] then
+    CopyDecompiled.Text = "Copied decompilation!"
+    CopyDecompiled.TextColor3 = Color3.fromRGB(76, 209, 55)
+else
+    warn(success[2])
+    CopyDecompiled.Text = "Decompilation error! Check F9 to see the error."
+    CopyDecompiled.TextColor3 = Color3.fromRGB(232, 65, 24)
+end
+
+wait(1.6)
+CopyDecompiled.Text = "Copy decompiled script"
+CopyDecompiled.TextColor3 = Color3.fromRGB(250, 251, 255)
+end) -- Close the pcall function
+
 end)
 
 BlockRemote.MouseButton1Click:Connect(function()
